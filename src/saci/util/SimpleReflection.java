@@ -45,7 +45,7 @@ public class SimpleReflection {
         Method method = methodCache.get(key);
         if (method == null) {
             try {
-                Class[] parameterTypes = getParameterTypes(args);
+                Class<?>[] parameterTypes = getParameterTypes(args);
                 method = clazz.getMethod(methodName, parameterTypes);
                 synchronized (methodCache) {
                     methodCache.put(key, method);
@@ -67,11 +67,11 @@ public class SimpleReflection {
         }
     }
 
-    public Class[] getParameterTypes(Object... args) {
+    public Class<?>[] getParameterTypes(Object... args) {
         if (args == null) {
             return null;
         }
-        Class[] result = new Class[args.length];
+        Class<?>[] result = new Class[args.length];
         for (int i = 0; i < result.length; i++) {
             if (args[i] != null) {
                 result[i] = args[i].getClass();

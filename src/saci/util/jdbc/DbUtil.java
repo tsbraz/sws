@@ -609,7 +609,7 @@ public class DbUtil {
         return "set" + sb.toString().toLowerCase();
     }
 
-    public void closeResultSet(ResultSet resultSet) {
+    private void closeResultSet(ResultSet resultSet) {
         if (resultSet == null) {
             return;
         }
@@ -621,7 +621,7 @@ public class DbUtil {
         }
     }
 
-    public void closeStatement(Statement statement) {
+    private void closeStatement(Statement statement) {
         if (statement == null) {
             return;
         }
@@ -633,7 +633,7 @@ public class DbUtil {
         }
     }
 
-    public void closeConnection(Connection connection) {
+    public void closeConnection() {
         if (connection == null) {
             return;
         }

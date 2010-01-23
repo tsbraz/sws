@@ -19,7 +19,8 @@
 package saci.util;
 
 public interface Cache<K, V> {
-    public void setLength(int length);
+    public void setCacheCapacity(int length);
+    public void setCleanPolicy(int length);
     public V put(K key, V value);
     public V get(K key);
     public boolean containsKey(K key);

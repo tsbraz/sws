@@ -18,34 +18,46 @@
 
 package saci.util;
 
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.Set;
+import java.util.Map.Entry;
 
 public class SimpleCache<K, V> implements Cache<K, V> {
 
-    private class SimpleCacheMap<T> {
-        T value;
-        long lastAccess;
+    public class SimpleCacheMap<T> {
+    	public K key;
+    	public T value;
+    	public long lastAccess;
     }
 
     private HashMap<K, SimpleCacheMap<V>> map;
-    private int length;
+    private int length, cacheCapacity;
+    private SimpleCacheMap<V>[] cleanPolicyKeys;
 
     public SimpleCache() {
-        this(50);
+        this(50, 10);
     }
 
-    public SimpleCache(int length) {
-        if (length <= 0) {
-            throw new IllegalArgumentException("Length must be greater than zero");
+    public SimpleCache(int cacheCapacity, int cleanPolicy) {
+        if (cacheCapacity <= 0) {
+            throw new IllegalArgumentException("Cache capacity must be greater than zero");
         }
-        setLength(length);
-        map = new HashMap<K, SimpleCacheMap<V>>(length);
+        if (cleanPolicy <= 0) {
+            throw new IllegalArgumentException("Clean policy must be greater than zero");
+        }
+        setCacheCapacity(cacheCapacity);
+        setCleanPolicy(cleanPolicy);
+        map = new HashMap<K, SimpleCacheMap<V>>(cacheCapacity);
     }
 
-    public void setLength(int length) {
-        this.length = length;
+    public void setCacheCapacity(int cacheCapacity) {
+        this.cacheCapacity = cacheCapacity;
+    }
+
+    @SuppressWarnings("unchecked")
+	public void setCleanPolicy(int cleanPolicy) {
+        cleanPolicyKeys = new SimpleCacheMap[cleanPolicy];
     }
 
     public void clear() {
@@ -65,54 +77,77 @@ public class SimpleCache<K, V> implements Cache<K, V> {
         return null;
     }
 
-    @Override
     public boolean isEmpty() {
         return map.isEmpty();
     }
 
     private synchronized void ensureCapacity() {
-        if (map.size() < length) {
+        if (length < cacheCapacity) {
             return;
         }
         Set<Entry<K, SimpleCacheMap<V>>> entrySet = map.entrySet();
-        long minAccessTime = -1;
-        K key = null;
         for (Entry<K, SimpleCacheMap<V>> entry : entrySet) {
             SimpleCacheMap<V> cache = entry.getValue();
-            if (minAccessTime == -1) {
-                minAccessTime = cache.lastAccess;
-            } else {
-                if (cache.lastAccess < minAccessTime) {
-                    key = entry.getKey();
-                }
-            }
+        	checkCleanPolicy(cache);
         }
-        if (key != null) {
-            map.remove(key);
-        }
+        clean();
+    }
+    
+    private void checkCleanPolicy(SimpleCacheMap<V> cache) {
+    	int minPolicyKeyPosition = -1;
+    	long minAccessTime = cache.lastAccess;
+    	for (int i = 0; i < cleanPolicyKeys.length; i++) {
+    		if (cleanPolicyKeys[i] == cache) {
+    			return;
+    		} else if (cleanPolicyKeys[i] == null) {
+    			cleanPolicyKeys[i] = cache;
+    			return;
+    		} else {
+        		if (minAccessTime < cleanPolicyKeys[i].lastAccess) {
+        			minAccessTime = cleanPolicyKeys[i].lastAccess;
+        			minPolicyKeyPosition = i;
+        		}
+    		}
+    	}
+    	if (minPolicyKeyPosition > -1) {
+    		cleanPolicyKeys[minPolicyKeyPosition] = cache;
+    	}
+    }
+    
+	private void clean() {
+    	for (int i = 0; i < cleanPolicyKeys.length; i++) {
+    		if (cleanPolicyKeys[i] != null) {
+    			remove(cleanPolicyKeys[i].key);
+    		} else {
+    			break;
+    		}
+    	}
+    	Arrays.fill(cleanPolicyKeys, null);
     }
 
-    @Override
     public synchronized V put(K key, V value) {
         remove(key);
         ensureCapacity();
         SimpleCacheMap<V> cache = new SimpleCacheMap<V>();
         cache.lastAccess = System.currentTimeMillis();
         cache.value = value;
+        cache.key = key;
         map.put(key, cache);
+        length++;
         return value;
     }
 
     public synchronized V remove(K key) {
         SimpleCacheMap<V> cache = map.remove(key);
         if (cache != null) {
+        	length--;
             return cache.value;
         }
         return null;
     }
 
     public int size() {
-        return map.size();
+        return length;
     }
 
 }
