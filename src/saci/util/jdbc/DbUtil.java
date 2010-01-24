@@ -264,8 +264,8 @@ public class DbUtil {
         Iterator<String> it = fields.keySet().iterator();
         Object[] param = new Object[1];
         while (it.hasNext()) {
-            String campo = (String) it.next();
-            MethodMap m = (MethodMap) fields.get(campo);
+            String campo = it.next();
+            MethodMap m = fields.get(campo);
             if (m != null) {
                 Class<?> paramClass = m.paramType;
                 try {
