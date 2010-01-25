@@ -41,21 +41,7 @@ public class SimpleReflection {
     }
 
     public Object callMethod(Class<?> clazz, String methodName, Object instance, Object... args) {
-        Object[] key = new Object[] {clazz, methodName, args};
-        Method method = methodCache.get(key);
-        if (method == null) {
-            try {
-                Class<?>[] parameterTypes = getParameterTypes(args);
-                method = clazz.getMethod(methodName, parameterTypes);
-                synchronized (methodCache) {
-                    methodCache.put(key, method);
-                }
-            } catch (NoSuchMethodException ex) {
-                return new RuntimeException(ex);
-            } catch (SecurityException ex) {
-                return new RuntimeException(ex);
-            }
-        }
+        Method method = getMethod(clazz, methodName, args);
         try {
             return method.invoke(instance, args);
         } catch (IllegalAccessException ex) {
@@ -65,6 +51,25 @@ public class SimpleReflection {
         } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    private Method getMethod(Class<?> clazz, String methodName, Object[] args) throws RuntimeException {
+        Class<?>[] parameterTypes = getParameterTypes(args);
+        Object[] key = new Object[]{clazz, methodName, parameterTypes};
+        Method method = methodCache.get(key);
+        if (method == null) {
+            try {
+                method = clazz.getMethod(methodName, parameterTypes);
+                synchronized (methodCache) {
+                    methodCache.put(key, method);
+                }
+            } catch (NoSuchMethodException ex) {
+                throw new RuntimeException(ex);
+            } catch (SecurityException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        return method;
     }
 
     public Class<?>[] getParameterTypes(Object... args) {
