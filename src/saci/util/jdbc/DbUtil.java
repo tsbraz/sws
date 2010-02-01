@@ -389,7 +389,7 @@ public class DbUtil {
     public Boolean getBoolean(String field, ResultSet rs) throws SQLException {
         String s = getString(field, rs);
         if (s != null) {
-            return s.equals("S") || s.equals("true") ? Boolean.TRUE : Boolean.FALSE;
+            return s.equals("S") || s.equals("true") || s.equals("1") ? Boolean.TRUE : Boolean.FALSE;
         } else {
             return null;
         }

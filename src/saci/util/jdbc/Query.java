@@ -230,6 +230,7 @@ public class Query {
                     if (DbUtil.logger.isLoggable(Level.INFO)) {
                         DbUtil.logger.info("Parameter " + parameter.getKey() + " not found in " + vo.getClass().getName());
                     }
+                    continue;
                 }
                 Class<?> type = method.getReturnType();
                 Object object = method.invoke(vo, (Object[]) null);
@@ -281,6 +282,9 @@ public class Query {
             String methodName = methods[i].getName();
             if (methodName.startsWith("get")) {
                 methodName = methodName.substring(3).toLowerCase();
+                map.put(methodName, methods[i]);
+            } else if (methodName.startsWith("is")) {
+                methodName = methodName.substring(2).toLowerCase();
                 map.put(methodName, methods[i]);
             }
         }

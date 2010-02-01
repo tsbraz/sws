@@ -22,39 +22,41 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class SimpleReflection {
-    public static final SimpleReflection instance = new SimpleReflection();
-    private final Cache<Object[], Method> methodCache = new SimpleCache<Object[], Method>();
+    private static final Cache<Object[], Method> methodCache = new SimpleCache<Object[], Method>();
+    protected Class clazz;
+    protected Object instance;
 
     private SimpleReflection() {
     }
 
-    public Object callMethod(Object instance, String methodName, Object... args) {
-        return callMethod(instance.getClass(), methodName, instance, args);
+    public static SimpleReflection reflect(Object instance) {
+        SimpleReflection sr = new SimpleReflection();
+        sr.clazz = instance.getClass();
+        sr.instance = instance;
+        return sr;
     }
 
-    public Object callMethod(String className, String methodName, Object instance, Object... args) {
+    public static SimpleReflection reflect(Class clazz) {
+        SimpleReflection sr = new SimpleReflection();
+        sr.clazz = clazz;
+        return sr;
+    }
+
+    public static SimpleReflection reflect(String className) {
         try {
-            return callMethod(Class.forName(className), methodName, instance, args);
+            SimpleReflection sr = new SimpleReflection();
+            sr.clazz = Class.forName(className);
+            return sr;
         } catch (ClassNotFoundException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    public Object callMethod(Class<?> clazz, String methodName, Object instance, Object... args) {
-        Method method = getMethod(clazz, methodName, args);
-        try {
-            return method.invoke(instance, args);
-        } catch (IllegalAccessException ex) {
-            throw new RuntimeException(ex);
-        } catch (IllegalArgumentException ex) {
-            throw new RuntimeException(ex);
-        } catch (InvocationTargetException ex) {
-            throw new RuntimeException(ex);
-        }
+    public ReflectionMethod method(String methodName) {
+        return new ReflectionMethod(methodName);
     }
 
-    private Method getMethod(Class<?> clazz, String methodName, Object[] args) throws RuntimeException {
-        Class<?>[] parameterTypes = getParameterTypes(args);
+    private Method getMethod(String methodName, Class... parameterTypes) throws RuntimeException {
         Object[] key = new Object[]{clazz, methodName, parameterTypes};
         Method method = methodCache.get(key);
         if (method == null) {
@@ -83,5 +85,42 @@ public class SimpleReflection {
             }
         }
         return result;
+    }
+
+    public class ReflectionMethod {
+        Class[] paramtypes;
+        String methodName;
+        Object instance;
+
+        ReflectionMethod(String methodName) {
+            this.methodName = methodName;
+        }
+
+        public void withParams(Class... params) {
+            this.paramtypes = params;
+        }
+
+        public void useInstance(Object instance) {
+            this.instance = instance;
+        }
+
+        public Object call(Object... params) {
+            try {
+                Object callInstance = instance == null ? SimpleReflection.this.instance : instance;
+                if (params != null) {
+                    if ((paramtypes == null || paramtypes.length == 0) && params.length > 0) {
+                        paramtypes = SimpleReflection.this.getParameterTypes(params);
+                    }
+                }
+                Method method = SimpleReflection.this.getMethod(methodName, paramtypes);
+                return method.invoke(callInstance, params);
+            } catch (IllegalAccessException ex) {
+                throw new RuntimeException(ex);
+            } catch (IllegalArgumentException ex) {
+                throw new RuntimeException(ex);
+            } catch (InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
     }
 }
