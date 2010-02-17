@@ -19,6 +19,7 @@
 package saci.util.jdbc;
 
 import java.io.InputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -77,14 +78,16 @@ import saci.util.SimpleCache;
  */
 public class DbUtil {
 
-    private static Cache<Class<?>, Map<String, MethodMap>> beanMap = new SimpleCache<Class<?>, Map<String, MethodMap>>();
+    private static Cache<Class<?>, Map<String, AccessorMap>> beanMap = new SimpleCache<Class<?>, Map<String, AccessorMap>>();
     static Logger logger = Logger.getLogger(DbUtil.class.getName());
     private ResultSetMetaData metaData;
     private Connection connection;
+    private boolean datasource = false;
 
-    protected class MethodMap {
+    protected class AccessorMap {
 
         Method method;
+        Field field;
         Class<?> paramType;
     }
 
@@ -108,6 +111,7 @@ public class DbUtil {
      */
     public DbUtil(DataSource datasource) throws SQLException {
         this(datasource.getConnection());
+        this.datasource = true;
     }
 
     /**
@@ -118,6 +122,7 @@ public class DbUtil {
         try {
             DataSource datasource = (DataSource) new InitialContext().lookup(datasourceJndi);
             this.connection = datasource.getConnection();
+            this.datasource = true;
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
@@ -163,6 +168,7 @@ public class DbUtil {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
+            closeConnectionDS();
         }
     }
 
@@ -197,6 +203,7 @@ public class DbUtil {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
+            closeConnectionDS();
         }
     }
 
@@ -220,6 +227,7 @@ public class DbUtil {
         } finally {
             closeStatement(stmt);
             closeResultSet(rs);
+            closeConnectionDS();
         }
     }
 
@@ -235,6 +243,7 @@ public class DbUtil {
             return result;
         } finally {
             closeStatement(stmt);
+            closeConnectionDS();
         }
     }
 
@@ -257,7 +266,7 @@ public class DbUtil {
      * @throws SQLException caso ocorra algum erro de SQLException
      */
     public void fillBean(Object bean, ResultSet rs) throws SQLException {
-        Map<String, MethodMap> fields = beanMap.get(bean.getClass());
+        Map<String, AccessorMap> fields = beanMap.get(bean.getClass());
         if (fields == null) {
             fields = mapBean(bean);
         }
@@ -265,9 +274,9 @@ public class DbUtil {
         Object[] param = new Object[1];
         while (it.hasNext()) {
             String campo = it.next();
-            MethodMap m = fields.get(campo);
-            if (m != null) {
-                Class<?> paramClass = m.paramType;
+            AccessorMap accessorMap = fields.get(campo);
+            if (accessorMap != null) {
+                Class<?> paramClass = accessorMap.paramType;
                 try {
                     if (paramClass.equals(Integer.class) || paramClass.equals(Integer.TYPE)) {
                         param[0] = getInt(campo, rs);
@@ -316,18 +325,32 @@ public class DbUtil {
                     } else {
                         throw new SQLException("Invalid data type " + paramClass);
                     }
-
-                    try {
-                        m.method.invoke(bean, param);
-                    } catch (IllegalAccessException e) {
-                        throw new SQLException(e.toString());
-                    } catch (InvocationTargetException e) {
-                        throw new SQLException(e.toString());
-                    }
+                    
+                    setValue(accessorMap, bean, param);
                 } catch (SQLException e) {
                     System.err.println(campo + " " + rs.getObject(campo) + "\n" + e.toString());
                     throw e;
                 }
+            }
+        }
+    }
+
+    private void setValue(AccessorMap accessorMap, Object bean, Object[] param) throws IllegalArgumentException, SQLException {
+        if (accessorMap.method != null) {
+            try {
+                accessorMap.method.invoke(bean, param);
+            } catch (IllegalAccessException e) {
+                throw new SQLException(e.toString());
+            } catch (InvocationTargetException e) {
+                throw new SQLException(e.toString());
+            }
+        } else {
+            try {
+                accessorMap.field.set(bean, param[0]);
+            } catch (IllegalArgumentException e) {
+                throw new SQLException(e.toString());
+            } catch (IllegalAccessException e) {
+                throw new SQLException(e.toString());
             }
         }
     }
@@ -562,17 +585,25 @@ public class DbUtil {
         setInputStream(i, value, stmt);
     }
 
-    protected Map<String, MethodMap> mapBean(Object bean) throws SQLException {
-        Map<String, MethodMap> map = new HashMap<String, MethodMap>();
+    protected Map<String, AccessorMap> mapBean(Object bean) throws SQLException {
+        Map<String, AccessorMap> map = new HashMap<String, AccessorMap>();
         Method[] methods = bean.getClass().getMethods();
+        Field[] fields = bean.getClass().getFields();
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
             String column = metaData.getColumnLabel(i).toLowerCase();
-            String field = getMethodName(column);
-            MethodMap methodMap = new MethodMap();
-            methodMap.method = seekMethod(field, methods);
-            if (methodMap.method != null) {
-                methodMap.paramType = methodMap.method.getParameterTypes()[0];
-                map.put(column, methodMap);
+            String field = getFieldName(column);
+            String method = "set" + field;
+            AccessorMap accessorMap = new AccessorMap();
+            accessorMap.method = seekMethod(method, methods);
+            if (accessorMap.method != null) {
+                accessorMap.paramType = accessorMap.method.getParameterTypes()[0];
+                map.put(column, accessorMap);
+            } else {
+                accessorMap.field = seekField(field, fields);
+                if (accessorMap.field != null) {
+                    accessorMap.paramType = accessorMap.field.getType();
+                    map.put(column, accessorMap);
+                }
             }
         }
         beanMap.put(bean.getClass(), map);
@@ -597,7 +628,21 @@ public class DbUtil {
         return null;
     }
 
-    protected String getMethodName(String fieldName) {
+    protected Field seekField(String fieldName, Field[] fields) {
+        for (Field field : fields) {
+            if (field.getName().equalsIgnoreCase(fieldName)) {
+                if (isValid(field.getType())) {
+                    return field;
+                }
+            }
+        }
+        if (logger.isLoggable(Level.INFO)) {
+            logger.info("Field " + fieldName + " not found");
+        }
+        return null;
+    }
+
+    protected String getFieldName(String fieldName) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < fieldName.length(); i++) {
             char c = fieldName.charAt(i);
@@ -606,7 +651,7 @@ public class DbUtil {
             }
             sb.append(c);
         }
-        return "set" + sb.toString().toLowerCase();
+        return sb.toString().toLowerCase();
     }
 
     private void closeResultSet(ResultSet resultSet) {
@@ -630,6 +675,12 @@ public class DbUtil {
             statement.close();
             statement = null;
         } catch (SQLException ignored) {
+        }
+    }
+
+    private void closeConnectionDS() {
+        if (datasource) {
+            closeConnection();
         }
     }
 
