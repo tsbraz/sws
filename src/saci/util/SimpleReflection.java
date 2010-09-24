@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 
 public class SimpleReflection {
     private static final Cache<Object[], Method> methodCache = new SimpleCache<Object[], Method>();
-    protected Class clazz;
+    protected Class<?> clazz;
     protected Object instance;
 
     private SimpleReflection() {
@@ -36,7 +36,7 @@ public class SimpleReflection {
         return sr;
     }
 
-    public static SimpleReflection reflect(Class clazz) {
+    public static SimpleReflection reflect(Class<?> clazz) {
         SimpleReflection sr = new SimpleReflection();
         sr.clazz = clazz;
         return sr;
@@ -89,7 +89,7 @@ public class SimpleReflection {
     }
 
     public class ReflectionMethod {
-        Class[] paramtypes;
+        Class<?>[] paramtypes;
         String methodName;
         Object instance;
 
@@ -97,7 +97,7 @@ public class SimpleReflection {
             this.methodName = methodName;
         }
 
-        public void withParams(Class... params) {
+        public void withParams(Class<?>... params) {
             this.paramtypes = params;
         }
 

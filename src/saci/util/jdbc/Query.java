@@ -199,8 +199,8 @@ public class Query {
      * @return
      * @throws SQLException
      */
-    public Query addParameter(InputStream value) throws SQLException {
-        dbUtil.set(param++, value, stmt);
+    public Query addParameter(InputStream value, int length) throws SQLException {
+        dbUtil.set(param++, value, length, stmt);
         return this;
     }
 
@@ -234,33 +234,7 @@ public class Query {
                 }
                 Class<?> type = method.getReturnType();
                 Object object = method.invoke(vo, (Object[]) null);
-                for (Integer index : parameter.getValue()) {
-                    if (type.equals(String.class)) {
-                        dbUtil.set(index, (String) object, stmt);
-                    } else if (type.equals(Byte.class) || type.equals(Byte.TYPE)) {
-                        dbUtil.set(index, (Byte) object, stmt);
-                    } else if (type.equals(Short.class) || type.equals(Short.TYPE)) {
-                        dbUtil.set(index, (Short) object, stmt);
-                    } else if (type.equals(Integer.class) || type.equals(Integer.TYPE)) {
-                        dbUtil.set(index, (Integer) object, stmt);
-                    } else if (type.equals(Long.class) || type.equals(Long.TYPE)) {
-                        dbUtil.set(index, (Long) object, stmt);
-                    } else if (type.equals(Float.class) || type.equals(Float.TYPE)) {
-                        dbUtil.set(index, (Float) object, stmt);
-                    } else if (type.equals(Double.class) || type.equals(Double.TYPE)) {
-                        dbUtil.set(index, (Double) object, stmt);
-                    } else if (type.equals(BigInteger.class)) {
-                        dbUtil.set(index, (BigInteger) object, stmt);
-                    } else if (type.equals(BigDecimal.class)) {
-                        dbUtil.set(index, (BigDecimal) object, stmt);
-                    } else if (type.equals(Date.class)) {
-                        dbUtil.set(index, (Date) object, stmt);
-                    } else if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
-                        dbUtil.set(index, (Boolean) object, stmt);
-                    } else {
-                        stmt.setObject(index, object);
-                    }
-                }
+                setStatementParameter(parameter, type, object);
             }
             return this;
         } catch (IllegalArgumentException e) {
@@ -271,6 +245,37 @@ public class Query {
             throw new RuntimeException(e);
         }
     }
+
+	private void setStatementParameter(Entry<String, List<Integer>> parameter,
+			Class<?> type, Object object) throws SQLException {
+		for (Integer index : parameter.getValue()) {
+		    if (type.equals(String.class)) {
+		        dbUtil.set(index, (String) object, stmt);
+		    } else if (type.equals(Byte.class) || type.equals(Byte.TYPE)) {
+		        dbUtil.set(index, (Byte) object, stmt);
+		    } else if (type.equals(Short.class) || type.equals(Short.TYPE)) {
+		        dbUtil.set(index, (Short) object, stmt);
+		    } else if (type.equals(Integer.class) || type.equals(Integer.TYPE)) {
+		        dbUtil.set(index, (Integer) object, stmt);
+		    } else if (type.equals(Long.class) || type.equals(Long.TYPE)) {
+		        dbUtil.set(index, (Long) object, stmt);
+		    } else if (type.equals(Float.class) || type.equals(Float.TYPE)) {
+		        dbUtil.set(index, (Float) object, stmt);
+		    } else if (type.equals(Double.class) || type.equals(Double.TYPE)) {
+		        dbUtil.set(index, (Double) object, stmt);
+		    } else if (type.equals(BigInteger.class)) {
+		        dbUtil.set(index, (BigInteger) object, stmt);
+		    } else if (type.equals(BigDecimal.class)) {
+		        dbUtil.set(index, (BigDecimal) object, stmt);
+		    } else if (type.equals(Date.class)) {
+		        dbUtil.set(index, (Date) object, stmt);
+		    } else if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
+		        dbUtil.set(index, (Boolean) object, stmt);
+		    } else {
+		        stmt.setObject(index, object);
+		    }
+		}
+	}
 
     protected Map<String, Method> mapBean(Object bean) throws SQLException {
         if (beanMap.containsKey(bean.getClass())) {
