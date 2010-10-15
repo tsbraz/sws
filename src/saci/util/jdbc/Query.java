@@ -214,6 +214,188 @@ public class Query {
         dbUtil.set(param++, value, stmt);
         return this;
     }
+    
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Integer value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Short value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Byte value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Long value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Float value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Double value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, BigDecimal value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, BigInteger value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Date value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, String value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query, adicionando "%" no final da string
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setLikeParameter(String name, String value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value + "%", stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query, adicionando "%" no inicio e fim da string
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setLikeAnyParameter(String name, String value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, "%" + value + "%", stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, InputStream value, int length) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, length, stmt);
+    	}
+        return this;
+    }
+
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+    public Query setParameter(String name, Boolean value) throws SQLException {
+    	for (Integer i : queryMap.getParameterIndex(name)) {
+    		dbUtil.set(i, value, stmt);
+    	}
+        return this;
+    }
 
     /**
      * Adiciona como parametros nomeados da query, o objeto passado por parametro
@@ -245,7 +427,7 @@ public class Query {
             throw new RuntimeException(e);
         }
     }
-
+    
 	private void setStatementParameter(Entry<String, List<Integer>> parameter,
 			Class<?> type, Object object) throws SQLException {
 		for (Integer index : parameter.getValue()) {
