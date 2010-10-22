@@ -221,6 +221,17 @@ public class Query {
      * @return
      * @throws SQLException
      */
+    public Query addParameter(byte[] value) throws SQLException {
+        dbUtil.set(param++, value, stmt);
+        return this;
+    }
+    
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
     public Query setParameter(String name, Integer value) throws SQLException {
     	for (Integer i : queryMap.getParameterIndex(name)) {
     		dbUtil.set(i, value, stmt);
@@ -370,6 +381,19 @@ public class Query {
     	}
         return this;
     }
+    
+    /**
+     * Adiciona o parametro à query
+     * @param value
+     * @return
+     * @throws SQLException
+     */
+   public Query setParameter(String name, byte[] value) throws SQLException {
+   	for (Integer i : queryMap.getParameterIndex(name)) {
+   		dbUtil.set(i, value, stmt);
+   	}
+       return this;
+   }
 
     /**
      * Adiciona o parametro à query

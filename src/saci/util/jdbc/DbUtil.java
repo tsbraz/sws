@@ -458,6 +458,14 @@ public class DbUtil {
             stmt.setByte(i, value.byteValue());
         }
     }
+    
+    public void setBytes(int i, byte[] value, PreparedStatement stmt) throws SQLException {
+        if (value == null) {
+            stmt.setNull(i, Types.NUMERIC);
+        } else {
+            stmt.setBytes(i, value);
+        }
+    }
 
     public void setLong(int i, Long value, PreparedStatement stmt) throws SQLException {
         if (value == null) {
@@ -573,6 +581,10 @@ public class DbUtil {
 
     public void set(int i, BigInteger value, PreparedStatement stmt) throws SQLException {
         setBigInteger(i, value, stmt);
+    }
+    
+    public void set(int i, byte[] value, PreparedStatement stmt) throws SQLException {
+        setBytes(i, value, stmt);
     }
 
     public void set(int i, InputStream value, int length, PreparedStatement stmt) throws SQLException {

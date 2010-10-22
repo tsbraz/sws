@@ -89,7 +89,7 @@ public class QueryMap {
     }
 
     public List<Integer> getParameterIndex(String paramName) {
-        return parameterMap.get(paramName);
+        return parameterMap.get(paramName.toLowerCase());
     }
 
     public Set<Entry<String, List<Integer>>> listParameters() {
