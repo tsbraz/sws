@@ -89,7 +89,7 @@ public class DbUtil {
         Method method;
         Field field;
         Class<?> paramType;
-        
+
     }
 
     /**
@@ -100,6 +100,7 @@ public class DbUtil {
 
     /**
      * Cria uma nova instância com a conexão passada por parametro
+     * 
      * @param conn
      */
     public DbUtil(Connection conn) {
@@ -108,6 +109,7 @@ public class DbUtil {
 
     /**
      * Cria uma nova instância com o datasource passado por parametro
+     * 
      * @param conn
      */
     public DbUtil(DataSource datasource) throws SQLException {
@@ -117,6 +119,7 @@ public class DbUtil {
 
     /**
      * Cria uma nova instância com o jndi do datasource passado por parametro
+     * 
      * @param conn
      */
     public DbUtil(String datasourceJndi) throws SQLException {
@@ -239,9 +242,12 @@ public class DbUtil {
 
     /**
      * Cria uma nova query baseada no comando passado por parametro.
-     * @param query a query que deve ser executada
+     * 
+     * @param query
+     *            a query que deve ser executada
      * @return a nova query gerada
-     * @throws SQLException caso ocorra algum erro de SQLException
+     * @throws SQLException
+     *             caso ocorra algum erro de SQLException
      */
     public Query execute(String query) throws SQLException {
         assert (connection != null);
@@ -249,11 +255,15 @@ public class DbUtil {
     }
 
     /**
-     * Preenche o objeto passado por parametro, baseado nas informações
-     * do <i>ResultSet</i>
-     * @param bean o objeto que deve ser preenchido
-     * @param rs o ResultSet que contém as informações
-     * @throws SQLException caso ocorra algum erro de SQLException
+     * Preenche o objeto passado por parametro, baseado nas informações do
+     * <i>ResultSet</i>
+     * 
+     * @param bean
+     *            o objeto que deve ser preenchido
+     * @param rs
+     *            o ResultSet que contém as informações
+     * @throws SQLException
+     *             caso ocorra algum erro de SQLException
      */
     public void fillBean(Object bean, ResultSet rs) throws SQLException {
         Map<String, AccessorMap> fields = beanMap(bean.getClass(), rs.getMetaData());
@@ -265,8 +275,7 @@ public class DbUtil {
             if (accessorMap != null) {
                 Class<?> paramClass = accessorMap.paramType;
                 try {
-                    setAttributeValue(bean, rs, param, campo, accessorMap,
-							paramClass);
+                    setAttributeValue(bean, rs, param, campo, accessorMap, paramClass);
                 } catch (SQLException e) {
                     System.err.println(campo + " " + rs.getObject(campo) + "\n" + e.toString());
                     throw e;
@@ -275,61 +284,61 @@ public class DbUtil {
         }
     }
 
-	private void setAttributeValue(Object bean, ResultSet rs, Object[] param,
-			String campo, AccessorMap accessorMap, Class<?> paramClass)
-			throws SQLException {
-		if (paramClass.equals(Integer.class) || paramClass.equals(Integer.TYPE)) {
-		    param[0] = getInt(campo, rs);
-		    if (param[0] == null && paramClass.equals(Integer.TYPE)) {
-		        param[0] = new Integer(0);
-		    }
-		} else if (paramClass.equals(Long.class) || paramClass.equals(Long.TYPE)) {
-		    param[0] = getLong(campo, rs);
-		    if (param[0] == null && paramClass.equals(Long.TYPE)) {
-		        param[0] = new Long(0);
-		    }
-		} else if (paramClass.equals(Float.class) || paramClass.equals(Float.TYPE)) {
-		    param[0] = getFloat(campo, rs);
-		    if (param[0] == null && paramClass.equals(Float.TYPE)) {
-		        param[0] = new Float(0);
-		    }
-		} else if (paramClass.equals(Double.class) || paramClass.equals(Double.TYPE)) {
-		    param[0] = getDouble(campo, rs);
-		    if (param[0] == null && paramClass.equals(Double.TYPE)) {
-		        param[0] = new Double(0);
-		    }
-		} else if (paramClass.equals(Boolean.class) || paramClass.equals(Boolean.TYPE)) {
-		    param[0] = getBoolean(campo, rs);
-		    if (param[0] == null && paramClass.equals(Boolean.TYPE)) {
-		        param[0] = Boolean.FALSE;
-		    }
-		} else if (paramClass.equals(String.class)) {
-		    Object o = rs.getObject(campo);
-		    if (rs.wasNull()) {
-		        param[0] = null;
-		    } else {
-		        if (o instanceof Date) {
-		            param[0] = saci.util.Types.parseString((Date) o);
-		        } else {
-		            param[0] = o.toString();
-		        }
-		    }
-		} else if (paramClass.equals(BigDecimal.class)) {
-		    param[0] = getBigDecimal(campo, rs);
-		} else if (paramClass.equals(BigInteger.class)) {
-		    param[0] = getBigInteger(campo, rs);
-		} else if (Date.class.isAssignableFrom(paramClass)) {
-		    param[0] = getDate(campo, rs);
-		} else if (InputStream.class.isAssignableFrom(paramClass)) {
-		    param[0] = getInputStream(campo, rs);
-		} else {
-		    throw new SQLException("Invalid data type " + paramClass);
-		}
-		
-		setValue(accessorMap, bean, param);
-	}
+    private void setAttributeValue(Object bean, ResultSet rs, Object[] param, String campo, AccessorMap accessorMap,
+            Class<?> paramClass) throws SQLException {
+        if (paramClass.equals(Integer.class) || paramClass.equals(Integer.TYPE)) {
+            param[0] = getInt(campo, rs);
+            if (param[0] == null && paramClass.equals(Integer.TYPE)) {
+                param[0] = new Integer(0);
+            }
+        } else if (paramClass.equals(Long.class) || paramClass.equals(Long.TYPE)) {
+            param[0] = getLong(campo, rs);
+            if (param[0] == null && paramClass.equals(Long.TYPE)) {
+                param[0] = new Long(0);
+            }
+        } else if (paramClass.equals(Float.class) || paramClass.equals(Float.TYPE)) {
+            param[0] = getFloat(campo, rs);
+            if (param[0] == null && paramClass.equals(Float.TYPE)) {
+                param[0] = new Float(0);
+            }
+        } else if (paramClass.equals(Double.class) || paramClass.equals(Double.TYPE)) {
+            param[0] = getDouble(campo, rs);
+            if (param[0] == null && paramClass.equals(Double.TYPE)) {
+                param[0] = new Double(0);
+            }
+        } else if (paramClass.equals(Boolean.class) || paramClass.equals(Boolean.TYPE)) {
+            param[0] = getBoolean(campo, rs);
+            if (param[0] == null && paramClass.equals(Boolean.TYPE)) {
+                param[0] = Boolean.FALSE;
+            }
+        } else if (paramClass.equals(String.class)) {
+            Object o = rs.getObject(campo);
+            if (rs.wasNull()) {
+                param[0] = null;
+            } else {
+                if (o instanceof Date) {
+                    param[0] = saci.util.Types.parseString((Date) o);
+                } else {
+                    param[0] = o.toString();
+                }
+            }
+        } else if (paramClass.equals(BigDecimal.class)) {
+            param[0] = getBigDecimal(campo, rs);
+        } else if (paramClass.equals(BigInteger.class)) {
+            param[0] = getBigInteger(campo, rs);
+        } else if (Date.class.isAssignableFrom(paramClass)) {
+            param[0] = getDate(campo, rs);
+        } else if (InputStream.class.isAssignableFrom(paramClass)) {
+            param[0] = getInputStream(campo, rs);
+        } else {
+            throw new SQLException("Invalid data type " + paramClass);
+        }
 
-    private void setValue(AccessorMap accessorMap, Object bean, Object[] param) throws IllegalArgumentException, SQLException {
+        setValue(accessorMap, bean, param);
+    }
+
+    private void setValue(AccessorMap accessorMap, Object bean, Object[] param) throws IllegalArgumentException,
+            SQLException {
         if (accessorMap.method != null) {
             try {
                 accessorMap.method.invoke(bean, param);
@@ -458,7 +467,7 @@ public class DbUtil {
             stmt.setByte(i, value.byteValue());
         }
     }
-    
+
     public void setBytes(int i, byte[] value, PreparedStatement stmt) throws SQLException {
         if (value == null) {
             stmt.setNull(i, Types.NUMERIC);
@@ -582,7 +591,7 @@ public class DbUtil {
     public void set(int i, BigInteger value, PreparedStatement stmt) throws SQLException {
         setBigInteger(i, value, stmt);
     }
-    
+
     public void set(int i, byte[] value, PreparedStatement stmt) throws SQLException {
         setBytes(i, value, stmt);
     }
@@ -592,17 +601,16 @@ public class DbUtil {
     }
 
     protected Map<String, AccessorMap> beanMap(Class<?> beanClass, ResultSetMetaData metaData) throws SQLException {
-    	Map<String, AccessorMap> map = beanMap.get(beanClass);
+        Map<String, AccessorMap> map = beanMap.get(beanClass);
         if (map == null) {
-        	map = createBeanMap(beanClass, metaData);
-        	beanMap.put(beanClass, map);
+            map = createBeanMap(beanClass, metaData);
+            beanMap.put(beanClass, map);
         }
         return map;
     }
 
-	private Map<String, AccessorMap> createBeanMap(Class<?> beanClass, ResultSetMetaData metaData)
-			throws SQLException {
-		Map<String, AccessorMap> map = new HashMap<String, AccessorMap>();
+    private Map<String, AccessorMap> createBeanMap(Class<?> beanClass, ResultSetMetaData metaData) throws SQLException {
+        Map<String, AccessorMap> map = new HashMap<String, AccessorMap>();
         Method[] methods = beanClass.getMethods();
         Field[] fields = beanClass.getFields();
         for (int i = 1; i <= metaData.getColumnCount(); i++) {
@@ -623,7 +631,7 @@ public class DbUtil {
             }
         }
         return map;
-	}
+    }
 
     private boolean isValid(Class<?> clazz) {
         return saci.util.Types.isPrintable(clazz) || InputStream.class.isAssignableFrom(clazz);

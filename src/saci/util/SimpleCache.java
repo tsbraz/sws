@@ -26,9 +26,9 @@ import java.util.Map.Entry;
 public class SimpleCache<K, V> implements Cache<K, V> {
 
     public class SimpleCacheMap<T> {
-    	public K key;
-    	public T value;
-    	public long lastAccess;
+        public K key;
+        public T value;
+        public long lastAccess;
     }
 
     private HashMap<K, SimpleCacheMap<V>> map;
@@ -56,7 +56,7 @@ public class SimpleCache<K, V> implements Cache<K, V> {
     }
 
     @SuppressWarnings("unchecked")
-	public void setCleanPolicy(int cleanPolicy) {
+    public void setCleanPolicy(int cleanPolicy) {
         cleanPolicyKeys = new SimpleCacheMap[cleanPolicy];
     }
 
@@ -88,41 +88,41 @@ public class SimpleCache<K, V> implements Cache<K, V> {
         Set<Entry<K, SimpleCacheMap<V>>> entrySet = map.entrySet();
         for (Entry<K, SimpleCacheMap<V>> entry : entrySet) {
             SimpleCacheMap<V> cache = entry.getValue();
-        	checkCleanPolicy(cache);
+            checkCleanPolicy(cache);
         }
         clean();
     }
-    
+
     private void checkCleanPolicy(SimpleCacheMap<V> cache) {
-    	int minPolicyKeyPosition = -1;
-    	long minAccessTime = cache.lastAccess;
-    	for (int i = 0; i < cleanPolicyKeys.length; i++) {
-    		if (cleanPolicyKeys[i] == cache) {
-    			return;
-    		} else if (cleanPolicyKeys[i] == null) {
-    			cleanPolicyKeys[i] = cache;
-    			return;
-    		} else {
-        		if (minAccessTime < cleanPolicyKeys[i].lastAccess) {
-        			minAccessTime = cleanPolicyKeys[i].lastAccess;
-        			minPolicyKeyPosition = i;
-        		}
-    		}
-    	}
-    	if (minPolicyKeyPosition > -1) {
-    		cleanPolicyKeys[minPolicyKeyPosition] = cache;
-    	}
+        int minPolicyKeyPosition = -1;
+        long minAccessTime = cache.lastAccess;
+        for (int i = 0; i < cleanPolicyKeys.length; i++) {
+            if (cleanPolicyKeys[i] == cache) {
+                return;
+            } else if (cleanPolicyKeys[i] == null) {
+                cleanPolicyKeys[i] = cache;
+                return;
+            } else {
+                if (minAccessTime < cleanPolicyKeys[i].lastAccess) {
+                    minAccessTime = cleanPolicyKeys[i].lastAccess;
+                    minPolicyKeyPosition = i;
+                }
+            }
+        }
+        if (minPolicyKeyPosition > -1) {
+            cleanPolicyKeys[minPolicyKeyPosition] = cache;
+        }
     }
-    
-	private void clean() {
-    	for (int i = 0; i < cleanPolicyKeys.length; i++) {
-    		if (cleanPolicyKeys[i] != null) {
-    			remove(cleanPolicyKeys[i].key);
-    		} else {
-    			break;
-    		}
-    	}
-    	Arrays.fill(cleanPolicyKeys, null);
+
+    private void clean() {
+        for (int i = 0; i < cleanPolicyKeys.length; i++) {
+            if (cleanPolicyKeys[i] != null) {
+                remove(cleanPolicyKeys[i].key);
+            } else {
+                break;
+            }
+        }
+        Arrays.fill(cleanPolicyKeys, null);
     }
 
     public synchronized V put(K key, V value) {
@@ -140,7 +140,7 @@ public class SimpleCache<K, V> implements Cache<K, V> {
     public synchronized V remove(K key) {
         SimpleCacheMap<V> cache = map.remove(key);
         if (cache != null) {
-        	length--;
+            length--;
             return cache.value;
         }
         return null;

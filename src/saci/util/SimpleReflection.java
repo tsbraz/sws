@@ -58,7 +58,7 @@ public class SimpleReflection {
 
     @SuppressWarnings("unchecked")
     private Method getMethod(String methodName, Class... parameterTypes) throws RuntimeException {
-        Object[] key = new Object[]{clazz, methodName, parameterTypes};
+        Object[] key = new Object[] { clazz, methodName, parameterTypes };
         Method method = methodCache.get(key);
         if (method == null) {
             try {

@@ -28,10 +28,11 @@ import java.util.Map;
 
 /**
  * Classe utilitária para conversão de dados
+ * 
  * @author Thiago
  */
 public class Types {
-    
+
     private static String datePattern = "yyyy-MM-dd";
     private static final Map<Class<?>, Boolean> printableMap = new HashMap<Class<?>, Boolean>();
 
@@ -57,9 +58,11 @@ public class Types {
     }
 
     /**
-     * Verifica se a classe passada por parametro é "imprimível" 
-     * (tipo primitivo, String, Date, BigDecimal e BigInteger)
-     * @param value a classe que deve ser testada
+     * Verifica se a classe passada por parametro é "imprimível" (tipo
+     * primitivo, String, Date, BigDecimal e BigInteger)
+     * 
+     * @param value
+     *            a classe que deve ser testada
      * @return
      */
     public static boolean isPrintable(Class<?> value) {
@@ -68,7 +71,9 @@ public class Types {
 
     /**
      * Altera o padrão de formatação de data, padrão yyyy-MM-dd
-     * @param pattern o novo padrão para formatação de datas
+     * 
+     * @param pattern
+     *            o novo padrão para formatação de datas
      */
     public static void setDatePattern(String pattern) {
         datePattern = pattern;
@@ -76,6 +81,7 @@ public class Types {
 
     /**
      * Executa um trim na string, se for nulo retorna ""
+     * 
      * @param o
      * @return executa um trim na string, se for nulo retorna ""
      */
@@ -85,7 +91,9 @@ public class Types {
 
     /**
      * Verifica se a string a nula ou vazia
-     * @param s a string a ser testada
+     * 
+     * @param s
+     *            a string a ser testada
      * @return
      */
     public static boolean isNullOrEmpty(String s) {
@@ -94,6 +102,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Boolean
+     * 
      * @param b
      * @return
      */
@@ -107,6 +116,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Byte
+     * 
      * @param i
      * @return
      */
@@ -121,6 +131,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Short
+     * 
      * @param i
      * @return
      */
@@ -132,7 +143,7 @@ public class Types {
             return null;
         }
     }
-    
+
     public static Character parseChar(String s) {
         if (!isNullOrEmpty(s)) {
             return new Character(s.charAt(0));
@@ -142,6 +153,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Integer
+     * 
      * @param i
      * @return
      */
@@ -156,6 +168,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para BigInteger
+     * 
      * @param d
      * @return
      */
@@ -171,6 +184,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Long
+     * 
      * @param l
      * @return
      */
@@ -185,6 +199,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Float
+     * 
      * @param d
      * @return
      */
@@ -200,6 +215,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Double
+     * 
      * @param d
      * @return
      */
@@ -215,6 +231,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para BigDecimal
+     * 
      * @param d
      * @return
      */
@@ -263,6 +280,7 @@ public class Types {
 
     /**
      * Transforma a string passada por parametro para Date
+     * 
      * @see Types#setDatePattern(java.lang.String)
      * @param d
      * @return
@@ -278,6 +296,7 @@ public class Types {
 
     /**
      * Transforma a data passada por parametro para String
+     * 
      * @see Types#setDatePattern(java.lang.String)
      * @param d
      * @return
@@ -292,6 +311,7 @@ public class Types {
 
     /**
      * Retorna o Byte no tipo primitivo byte, caso nulo, retorna 0.
+     * 
      * @param d
      * @return
      */
@@ -301,6 +321,7 @@ public class Types {
 
     /**
      * Retorna o Short no tipo primitivo short, caso nulo, retorna 0.
+     * 
      * @param d
      * @return
      */
@@ -310,6 +331,7 @@ public class Types {
 
     /**
      * Retorna o Integer no tipo primitivo int, caso nulo, retorna 0.
+     * 
      * @param d
      * @return
      */
@@ -319,6 +341,7 @@ public class Types {
 
     /**
      * Retorna o Long no tipo primitivo long, caso nulo, retorna 0.
+     * 
      * @param d
      * @return
      */
@@ -328,6 +351,7 @@ public class Types {
 
     /**
      * Retorna o Float no tipo primitivo float, caso nulo, retorna 0.
+     * 
      * @param d
      * @return
      */
@@ -337,6 +361,7 @@ public class Types {
 
     /**
      * Retorna o Double no tipo primitivo double, caso nulo, retorna 0.
+     * 
      * @param d
      * @return
      */
@@ -346,6 +371,7 @@ public class Types {
 
     /**
      * Retorna o Boolean no tipo primitivo boolean, caso nulo, retorna false.
+     * 
      * @param d
      * @return
      */
@@ -354,19 +380,25 @@ public class Types {
     }
 
     /**
-     * Retorna o objeto passado por parametro em um objeto da classe do parametro <i>to</i>.
-     *
-     * <p>Transforma os seguintes tipos:
-     * <p>String, Byte, Short, Integer, Long, Float, Double, BigInteger,
+     * Retorna o objeto passado por parametro em um objeto da classe do
+     * parametro <i>to</i>.
+     * <p>
+     * Transforma os seguintes tipos:
+     * <p>
+     * String, Byte, Short, Integer, Long, Float, Double, BigInteger,
      * BigDecimal, Date, Boolean
-     * <p>RuntimeException caso não seja nenhuma das classes reconhecidas
+     * <p>
+     * RuntimeException caso não seja nenhuma das classes reconhecidas
+     * 
      * @param <T>
-     * @param o O objeto que deve ser transformado
-     * @param to A classe na qual o objeto deve ser transformado
+     * @param o
+     *            O objeto que deve ser transformado
+     * @param to
+     *            A classe na qual o objeto deve ser transformado
      * @return
      */
     @SuppressWarnings("unchecked")
-	public static <T> T cast(Object o, Class<T> to) {
+    public static <T> T cast(Object o, Class<T> to) {
         String s = o == null ? "" : o.toString();
         T result = null;
         if (to.equals(String.class)) {
@@ -374,32 +406,32 @@ public class Types {
         } else if (to.equals(Byte.class) || to.equals(Byte.TYPE)) {
             result = (T) parseByte(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) new Byte((byte)0);
+                result = (T) new Byte((byte) 0);
             }
         } else if (to.equals(Short.class) || to.equals(Short.TYPE)) {
             result = (T) parseShort(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) new Short((short)0);
+                result = (T) new Short((short) 0);
             }
         } else if (to.equals(Integer.class) || to.equals(Integer.TYPE)) {
             result = (T) parseInt(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) new Integer((short)0);
+                result = (T) new Integer((short) 0);
             }
         } else if (to.equals(Long.class) || to.equals(Long.TYPE)) {
             result = (T) parseLong(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) new Long((short)0);
+                result = (T) new Long((short) 0);
             }
         } else if (to.equals(Float.class) || to.equals(Float.TYPE)) {
             result = (T) parseFloat(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) new Float((short)0);
+                result = (T) new Float((short) 0);
             }
         } else if (to.equals(Double.class) || to.equals(Double.TYPE)) {
             result = (T) parseDouble(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) new Double((short)0);
+                result = (T) new Double((short) 0);
             }
         } else if (to.equals(BigInteger.class)) {
             return (T) parseBigInteger(s);
@@ -409,12 +441,12 @@ public class Types {
             if (o instanceof Date) {
                 result = (T) o;
             } else {
-            	result = (T) parseDate(s);
+                result = (T) parseDate(s);
             }
         } else if (to.equals(Boolean.class) || to.equals(Boolean.TYPE)) {
             result = (T) parseBoolean(s);
             if (result == null && to.isPrimitive()) {
-            	result = (T) Boolean.FALSE;
+                result = (T) Boolean.FALSE;
             }
         } else {
             throw new RuntimeException("Unknown cast type " + to.getName());

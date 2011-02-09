@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 /**
  * Listener para quando uma linha do banco é carregada para dentro do VO
+ * 
  * @author Thiago
  */
 public interface QueryListener<T> {
