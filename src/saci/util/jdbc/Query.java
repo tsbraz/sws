@@ -462,7 +462,7 @@ public class Query {
      */
     public Query setNamedParameter(Object vo) throws SQLException {
         if (vo instanceof Map) {
-            mapMapParameters((Map<?,?>) vo);
+            mapMapParameters((Map<?, ?>) vo);
         } else {
             mapBeanParameters(vo);
         }
@@ -472,14 +472,14 @@ public class Query {
     private void mapMapParameters(Map<?, ?> map) throws SQLException {
         Map<String, Object> values = prepareParameterMap(map);
         for (Entry<String, List<Integer>> parameter : queryMap.listParameters()) {
-            Object value = values.get(parameter.getKey());
-            if (value == null) {
+            if (!values.containsKey(parameter.getKey())) {
                 if (DbUtil.logger.isLoggable(Level.INFO)) {
                     DbUtil.logger.info("Parameter " + parameter.getKey() + " not found in parameter map");
                 }
                 continue;
             }
-            setStatementParameter(parameter, value.getClass(), value);
+            Object value = values.get(parameter.getKey());
+            setStatementParameter(parameter, value == null ? String.class : value.getClass(), value);
         }
     }
 
