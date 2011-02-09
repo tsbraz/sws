@@ -63,6 +63,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -74,6 +75,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -85,6 +87,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -96,6 +99,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -107,6 +111,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -118,6 +123,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -129,6 +135,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -140,6 +147,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -151,6 +159,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -162,6 +171,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -173,6 +183,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query, adicionando "%" no final da string
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -184,6 +195,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query, adicionando "%" no inicio e fim da string
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -195,6 +207,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -206,6 +219,7 @@ public class Query {
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -214,9 +228,10 @@ public class Query {
         dbUtil.set(param++, value, stmt);
         return this;
     }
-    
+
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
@@ -225,216 +240,266 @@ public class Query {
         dbUtil.set(param++, value, stmt);
         return this;
     }
-    
+
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Integer value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Short value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Byte value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Long value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Float value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Double value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, BigDecimal value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, BigInteger value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Date value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, String value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query, adicionando "%" no final da string
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setLikeParameter(String name, String value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value + "%", stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value + "%", stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query, adicionando "%" no inicio e fim da string
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setLikeAnyParameter(String name, String value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, "%" + value + "%", stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, "%" + value + "%", stmt);
+        }
         return this;
     }
-    
+
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
-   public Query setParameter(String name, byte[] value) throws SQLException {
-   	for (Integer i : queryMap.getParameterIndex(name)) {
-   		dbUtil.set(i, value, stmt);
-   	}
-       return this;
-   }
+    public Query setParameter(String name, byte[] value) throws SQLException {
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
+        return this;
+    }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, InputStream value, int length) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, length, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, length, stmt);
+        }
         return this;
     }
 
     /**
      * Adiciona o parametro à query
+     * 
      * @param value
      * @return
      * @throws SQLException
      */
     public Query setParameter(String name, Boolean value) throws SQLException {
-    	for (Integer i : queryMap.getParameterIndex(name)) {
-    		dbUtil.set(i, value, stmt);
-    	}
+        for (Integer i : queryMap.getParameterIndex(name)) {
+            dbUtil.set(i, value, stmt);
+        }
         return this;
     }
 
     /**
-     * Adiciona como parametros nomeados da query, o objeto passado por parametro
-     * @param vo o objeto que contem os parametros da query
+     * Adiciona como parametros nomeados da query, o objeto passado por
+     * parametro
+     * 
+     * @param vo
+     *            o objeto que contem os parametros da query
      * @return
      * @throws SQLException
      */
     public Query setNamedParameter(Object vo) throws SQLException {
+        if (vo instanceof Map) {
+            mapMapParameters((Map<?,?>) vo);
+        } else {
+            mapBeanParameters(vo);
+        }
+        return this;
+    }
+
+    private void mapMapParameters(Map<?, ?> map) throws SQLException {
+        Map<String, Object> values = prepareParameterMap(map);
+        for (Entry<String, List<Integer>> parameter : queryMap.listParameters()) {
+            Object value = values.get(parameter.getKey());
+            if (value == null) {
+                if (DbUtil.logger.isLoggable(Level.INFO)) {
+                    DbUtil.logger.info("Parameter " + parameter.getKey() + " not found in parameter map");
+                }
+                continue;
+            }
+            setStatementParameter(parameter, value.getClass(), value);
+        }
+    }
+
+    private Map<String, Object> prepareParameterMap(Map<?, ?> map) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        for (Entry<?, ?> entry : map.entrySet()) {
+            result.put(entry.getKey().toString().toLowerCase(), entry.getValue());
+        }
+        return result;
+    }
+
+    private void mapBeanParameters(Object vo) throws SQLException {
         try {
             Map<String, Method> methods = mapBean(vo);
             for (Entry<String, List<Integer>> parameter : queryMap.listParameters()) {
                 Method method = methods.get(parameter.getKey());
                 if (method == null) {
                     if (DbUtil.logger.isLoggable(Level.INFO)) {
-                        DbUtil.logger.info("Parameter " + parameter.getKey() + " not found in " + vo.getClass().getName());
+                        DbUtil.logger.info("Parameter " + parameter.getKey() + " not found in "
+                                + vo.getClass().getName());
                     }
                     continue;
                 }
@@ -442,7 +507,6 @@ public class Query {
                 Object object = method.invoke(vo, (Object[]) null);
                 setStatementParameter(parameter, type, object);
             }
-            return this;
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(e);
         } catch (IllegalAccessException e) {
@@ -451,37 +515,37 @@ public class Query {
             throw new RuntimeException(e);
         }
     }
-    
-	private void setStatementParameter(Entry<String, List<Integer>> parameter,
-			Class<?> type, Object object) throws SQLException {
-		for (Integer index : parameter.getValue()) {
-		    if (type.equals(String.class)) {
-		        dbUtil.set(index, (String) object, stmt);
-		    } else if (type.equals(Byte.class) || type.equals(Byte.TYPE)) {
-		        dbUtil.set(index, (Byte) object, stmt);
-		    } else if (type.equals(Short.class) || type.equals(Short.TYPE)) {
-		        dbUtil.set(index, (Short) object, stmt);
-		    } else if (type.equals(Integer.class) || type.equals(Integer.TYPE)) {
-		        dbUtil.set(index, (Integer) object, stmt);
-		    } else if (type.equals(Long.class) || type.equals(Long.TYPE)) {
-		        dbUtil.set(index, (Long) object, stmt);
-		    } else if (type.equals(Float.class) || type.equals(Float.TYPE)) {
-		        dbUtil.set(index, (Float) object, stmt);
-		    } else if (type.equals(Double.class) || type.equals(Double.TYPE)) {
-		        dbUtil.set(index, (Double) object, stmt);
-		    } else if (type.equals(BigInteger.class)) {
-		        dbUtil.set(index, (BigInteger) object, stmt);
-		    } else if (type.equals(BigDecimal.class)) {
-		        dbUtil.set(index, (BigDecimal) object, stmt);
-		    } else if (type.equals(Date.class)) {
-		        dbUtil.set(index, (Date) object, stmt);
-		    } else if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
-		        dbUtil.set(index, (Boolean) object, stmt);
-		    } else {
-		        stmt.setObject(index, object);
-		    }
-		}
-	}
+
+    private void setStatementParameter(Entry<String, List<Integer>> parameter, Class<?> type, Object object)
+            throws SQLException {
+        for (Integer index : parameter.getValue()) {
+            if (type.equals(String.class)) {
+                dbUtil.set(index, (String) object, stmt);
+            } else if (type.equals(Byte.class) || type.equals(Byte.TYPE)) {
+                dbUtil.set(index, (Byte) object, stmt);
+            } else if (type.equals(Short.class) || type.equals(Short.TYPE)) {
+                dbUtil.set(index, (Short) object, stmt);
+            } else if (type.equals(Integer.class) || type.equals(Integer.TYPE)) {
+                dbUtil.set(index, (Integer) object, stmt);
+            } else if (type.equals(Long.class) || type.equals(Long.TYPE)) {
+                dbUtil.set(index, (Long) object, stmt);
+            } else if (type.equals(Float.class) || type.equals(Float.TYPE)) {
+                dbUtil.set(index, (Float) object, stmt);
+            } else if (type.equals(Double.class) || type.equals(Double.TYPE)) {
+                dbUtil.set(index, (Double) object, stmt);
+            } else if (type.equals(BigInteger.class)) {
+                dbUtil.set(index, (BigInteger) object, stmt);
+            } else if (type.equals(BigDecimal.class)) {
+                dbUtil.set(index, (BigDecimal) object, stmt);
+            } else if (type.equals(Date.class)) {
+                dbUtil.set(index, (Date) object, stmt);
+            } else if (type.equals(Boolean.class) || type.equals(Boolean.TYPE)) {
+                dbUtil.set(index, (Boolean) object, stmt);
+            } else {
+                stmt.setObject(index, object);
+            }
+        }
+    }
 
     protected Map<String, Method> mapBean(Object bean) throws SQLException {
         if (beanMap.containsKey(bean.getClass())) {
@@ -505,6 +569,7 @@ public class Query {
 
     /**
      * Adiciona um listener para quando as linhas forem carregadas para um VO
+     * 
      * @param listener
      * @return
      */
@@ -533,8 +598,10 @@ public class Query {
 
     /**
      * Executa a query, retornando uma lista de objetos da classe
+     * 
      * @param <T>
-     * @param voClass A classe que deve ser usada para recuperar os dados da query
+     * @param voClass
+     *            A classe que deve ser usada para recuperar os dados da query
      * @return uma lista com os dados da query
      * @throws SQLException
      */
@@ -544,8 +611,10 @@ public class Query {
 
     /**
      * Executa a query, retornando um objeto
+     * 
      * @param <T>
-     * @param voClass o objeto que deve ser preenchido com o resultado da query
+     * @param voClass
+     *            o objeto que deve ser preenchido com o resultado da query
      * @return uma nova instância do objeto
      * @throws SQLException
      */
@@ -554,8 +623,11 @@ public class Query {
     }
 
     /**
-     * Executa a query, retornando os dados da query no objeto passado por parametro
-     * @param vo o objeto que deve ser preenchido com o resultado da query
+     * Executa a query, retornando os dados da query no objeto passado por
+     * parametro
+     * 
+     * @param vo
+     *            o objeto que deve ser preenchido com o resultado da query
      * @return se algum resultado foi encontrado
      * @throws SQLException
      */
@@ -566,6 +638,7 @@ public class Query {
     /**
      * Executa um comando de INSERT, UPDATE ou DELETE, retornando a quantidade
      * de registros atualizados
+     * 
      * @return a quantidade de registros atualizados
      * @throws SQLException
      */
