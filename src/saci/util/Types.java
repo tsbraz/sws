@@ -36,6 +36,7 @@ import java.util.Map;
  */
 public class Types {
 
+    private static final String INTEGER_REGEXP = "[^0-9]";
     private static String datePattern = "yyyy-MM-dd";
     private static final Map<Class<?>, Boolean> printableMap = new HashMap<Class<?>, Boolean>();
 
@@ -250,37 +251,25 @@ public class Types {
 
     static String prepareInteger(String s) {
         if (!isNullOrEmpty(s)) {
-            StringBuffer sb = new StringBuffer();
             boolean neg = s.startsWith("-");
-            for (int i = 0; i < s.length(); i++) {
-                if (Character.isDigit(s.charAt(i))) {
-                    sb.append(s.charAt(i));
-                }
-            }
-            return neg ? "-" + sb.toString() : sb.toString();
+            s = s.replaceAll(INTEGER_REGEXP, "");
+            return neg ? "-" + s : s;
         }
         return null;
     }
 
     static String prepareDecimal(String s) {
         if (!isNullOrEmpty(s)) {
-            StringBuffer sb = new StringBuffer();
-            char decimalSeparator = s.lastIndexOf(".") > s.lastIndexOf(",") ? '.' : ',';
             boolean neg = s.startsWith("-");
-            boolean dot = false;
-            for (int i = 0; i < s.length(); i++) {
-                if (Character.isDigit(s.charAt(i))) {
-                    sb.append(s.charAt(i));
-                } else if (!dot && s.charAt(i) == decimalSeparator) {
-                    dot = true;
-                    sb.append(".");
-                }
-            }
-            return neg ? "-" + sb.toString() : sb.toString();
+            int decimalIndex = Math.max(s.lastIndexOf("."), s.lastIndexOf(","));
+            String s1 = s.substring(0, decimalIndex).replaceAll(INTEGER_REGEXP, "");
+            String s2 = s.substring(decimalIndex).replaceAll(INTEGER_REGEXP, "");
+            s = s1 + "." + s2;
+            return neg ? "-" + s : s;
         }
         return null;
     }
-
+    
     /**
      * Transforma a string passada por parametro para Date
      * 
