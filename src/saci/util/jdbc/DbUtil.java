@@ -143,7 +143,7 @@ public class DbUtil {
                 logger.info("Tempo da query: " + (System.currentTimeMillis() - ini));
             }
             List<T> result = new ArrayList<T>();
-            if (saci.util.Types.isPrintable(voClass)) {
+            if (isPrintable(voClass)) {
                 while (rs.next()) {
                     result.add(saci.util.Types.cast(rs.getObject(1), voClass));
                 }
@@ -166,6 +166,10 @@ public class DbUtil {
             closeConnectionDS();
         }
     }
+    
+    private boolean isPrintable(Class<?> value) {
+        return saci.util.Types.isPrintable(value) || InputStream.class.isAssignableFrom(value) || byte[].class.equals(value);
+    }
 
     <T> T get(Query query, Class<T> voClass) throws SQLException {
         PreparedStatement stmt = null;
@@ -177,7 +181,7 @@ public class DbUtil {
             if (logger.isLoggable(Level.INFO)) {
                 logger.info("Tempo da query: " + (System.currentTimeMillis() - ini));
             }
-            if (saci.util.Types.isPrintable(voClass)) {
+            if (isPrintable(voClass)) {
                 if (rs.next()) {
                     return saci.util.Types.cast(rs.getObject(1), voClass);
                 }
@@ -286,55 +290,99 @@ public class DbUtil {
 
     private void setAttributeValue(Object bean, ResultSet rs, Object[] param, String campo, AccessorMap accessorMap,
             Class<?> paramClass) throws SQLException {
+        readValue(rs, param, campo, paramClass);
+        setValue(accessorMap, bean, param);
+    }
+
+    private void readValue(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
         if (paramClass.equals(Integer.class) || paramClass.equals(Integer.TYPE)) {
-            param[0] = getInt(campo, rs);
-            if (param[0] == null && paramClass.equals(Integer.TYPE)) {
-                param[0] = new Integer(0);
-            }
+            readInteger(rs, param, campo, paramClass);
         } else if (paramClass.equals(Long.class) || paramClass.equals(Long.TYPE)) {
-            param[0] = getLong(campo, rs);
-            if (param[0] == null && paramClass.equals(Long.TYPE)) {
-                param[0] = new Long(0);
-            }
+            readLong(rs, param, campo, paramClass);
         } else if (paramClass.equals(Float.class) || paramClass.equals(Float.TYPE)) {
-            param[0] = getFloat(campo, rs);
-            if (param[0] == null && paramClass.equals(Float.TYPE)) {
-                param[0] = new Float(0);
-            }
+            readFloat(rs, param, campo, paramClass);
         } else if (paramClass.equals(Double.class) || paramClass.equals(Double.TYPE)) {
-            param[0] = getDouble(campo, rs);
-            if (param[0] == null && paramClass.equals(Double.TYPE)) {
-                param[0] = new Double(0);
-            }
+            readDouble(rs, param, campo, paramClass);
         } else if (paramClass.equals(Boolean.class) || paramClass.equals(Boolean.TYPE)) {
-            param[0] = getBoolean(campo, rs);
-            if (param[0] == null && paramClass.equals(Boolean.TYPE)) {
-                param[0] = Boolean.FALSE;
-            }
+            readBoolean(rs, param, campo, paramClass);
         } else if (paramClass.equals(String.class)) {
-            Object o = rs.getObject(campo);
-            if (rs.wasNull()) {
-                param[0] = null;
-            } else {
-                if (o instanceof Date) {
-                    param[0] = saci.util.Types.parseString((Date) o);
-                } else {
-                    param[0] = o.toString();
-                }
-            }
+            readString(rs, param, campo);
         } else if (paramClass.equals(BigDecimal.class)) {
-            param[0] = getBigDecimal(campo, rs);
+            readBigDecimal(rs, param, campo);
         } else if (paramClass.equals(BigInteger.class)) {
-            param[0] = getBigInteger(campo, rs);
+            readBigInteger(rs, param, campo);
         } else if (Date.class.isAssignableFrom(paramClass)) {
-            param[0] = getDate(campo, rs);
-        } else if (InputStream.class.isAssignableFrom(paramClass)) {
-            param[0] = getInputStream(campo, rs);
+            readDate(rs, param, campo);
+        } else if (InputStream.class.isAssignableFrom(paramClass) || byte[].class.equals(paramClass)) {
+            readInputStream(rs, param, campo, paramClass);
         } else {
             throw new SQLException("Invalid data type " + paramClass);
         }
+    }
 
-        setValue(accessorMap, bean, param);
+    private void readInputStream(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
+        InputStream in = getInputStream(campo, rs);
+        param[0] = saci.util.Types.cast(in, paramClass);
+    }
+
+    private void readDate(ResultSet rs, Object[] param, String campo) throws SQLException {
+        param[0] = getDate(campo, rs);
+    }
+
+    private void readBigInteger(ResultSet rs, Object[] param, String campo) throws SQLException {
+        param[0] = getBigInteger(campo, rs);
+    }
+
+    private void readBigDecimal(ResultSet rs, Object[] param, String campo) throws SQLException {
+        param[0] = getBigDecimal(campo, rs);
+    }
+
+    private void readString(ResultSet rs, Object[] param, String campo) throws SQLException {
+        Object o = rs.getObject(campo);
+        if (rs.wasNull()) {
+            param[0] = null;
+        } else {
+            if (o instanceof Date) {
+                param[0] = saci.util.Types.parseString((Date) o);
+            } else {
+                param[0] = o.toString();
+            }
+        }
+    }
+
+    private void readBoolean(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
+        param[0] = getBoolean(campo, rs);
+        if (param[0] == null && paramClass.equals(Boolean.TYPE)) {
+            param[0] = Boolean.FALSE;
+        }
+    }
+
+    private void readDouble(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
+        param[0] = getDouble(campo, rs);
+        if (param[0] == null && paramClass.equals(Double.TYPE)) {
+            param[0] = new Double(0);
+        }
+    }
+
+    private void readFloat(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
+        param[0] = getFloat(campo, rs);
+        if (param[0] == null && paramClass.equals(Float.TYPE)) {
+            param[0] = new Float(0);
+        }
+    }
+
+    private void readLong(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
+        param[0] = getLong(campo, rs);
+        if (param[0] == null && paramClass.equals(Long.TYPE)) {
+            param[0] = new Long(0);
+        }
+    }
+
+    private void readInteger(ResultSet rs, Object[] param, String campo, Class<?> paramClass) throws SQLException {
+        param[0] = getInt(campo, rs);
+        if (param[0] == null && paramClass.equals(Integer.TYPE)) {
+            param[0] = new Integer(0);
+        }
     }
 
     private void setValue(AccessorMap accessorMap, Object bean, Object[] param) throws IllegalArgumentException,

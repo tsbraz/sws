@@ -18,6 +18,9 @@
 
 package saci.util;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.ParsePosition;
@@ -404,52 +407,127 @@ public class Types {
         if (to.equals(String.class)) {
             return (T) s;
         } else if (to.equals(Byte.class) || to.equals(Byte.TYPE)) {
-            result = (T) parseByte(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) new Byte((byte) 0);
-            }
+            result = castByte(to, s);
         } else if (to.equals(Short.class) || to.equals(Short.TYPE)) {
-            result = (T) parseShort(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) new Short((short) 0);
-            }
+            result = castShort(to, s);
         } else if (to.equals(Integer.class) || to.equals(Integer.TYPE)) {
-            result = (T) parseInt(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) new Integer((short) 0);
-            }
+            result = castInteger(to, s);
         } else if (to.equals(Long.class) || to.equals(Long.TYPE)) {
-            result = (T) parseLong(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) new Long((short) 0);
-            }
+            result = castLong(to, s);
         } else if (to.equals(Float.class) || to.equals(Float.TYPE)) {
-            result = (T) parseFloat(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) new Float((short) 0);
-            }
+            result = castFloat(to, s);
         } else if (to.equals(Double.class) || to.equals(Double.TYPE)) {
-            result = (T) parseDouble(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) new Double((short) 0);
-            }
+            result = castDouble(to, s);
         } else if (to.equals(BigInteger.class)) {
             return (T) parseBigInteger(s);
         } else if (to.equals(BigDecimal.class)) {
             return (T) parseBigDecimal(s);
         } else if (to.equals(Date.class)) {
-            if (o instanceof Date) {
-                result = (T) o;
-            } else {
-                result = (T) parseDate(s);
-            }
+            result = castDate(o, s);
         } else if (to.equals(Boolean.class) || to.equals(Boolean.TYPE)) {
-            result = (T) parseBoolean(s);
-            if (result == null && to.isPrimitive()) {
-                result = (T) Boolean.FALSE;
-            }
+            result = castBoolean(to, s);
+        } else if (to.equals(InputStream.class) || to.equals(byte[].class)) {
+            result = castInputStream(o, to.equals(byte[].class));
         } else {
             throw new RuntimeException("Unknown cast type " + to.getName());
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castInputStream(Object o, boolean isByteArray) {
+        T result = null;
+        try {
+            ByteArrayOutputStream bout = new ByteArrayOutputStream();
+            IOUtil.echo((InputStream)o, bout);
+            if (isByteArray) {
+                result = (T) bout.toByteArray();
+            } else {
+                result = (T) new ByteArrayInputStream(bout.toByteArray());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castBoolean(Class<T> to, String s) {
+        T result;
+        result = (T) parseBoolean(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) Boolean.FALSE;
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castDate(Object o, String s) {
+        T result;
+        if (o instanceof Date) {
+            result = (T) o;
+        } else {
+            result = (T) parseDate(s);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castDouble(Class<T> to, String s) {
+        T result;
+        result = (T) parseDouble(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) new Double((short) 0);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castFloat(Class<T> to, String s) {
+        T result;
+        result = (T) parseFloat(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) new Float((short) 0);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castLong(Class<T> to, String s) {
+        T result;
+        result = (T) parseLong(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) new Long((short) 0);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castInteger(Class<T> to, String s) {
+        T result;
+        result = (T) parseInt(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) new Integer((short) 0);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castShort(Class<T> to, String s) {
+        T result;
+        result = (T) parseShort(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) new Short((short) 0);
+        }
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T castByte(Class<T> to, String s) {
+        T result;
+        result = (T) parseByte(s);
+        if (result == null && to.isPrimitive()) {
+            result = (T) new Byte((byte) 0);
         }
         return result;
     }

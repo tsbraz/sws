@@ -73,4 +73,28 @@ public class StringUtil {
         return sb.toString();
     }
     
+    public static String join(String[] text, String delimiter) {
+        StringBuilder sb = new StringBuilder();
+        boolean insertDelimiter = false;
+        for (String s : text) {
+            if (insertDelimiter) {
+                sb.append(delimiter);
+            }
+            sb.append(s);
+            insertDelimiter = true;
+        }
+        return sb.toString();
+    }
+
+    public static String surround(String text, String delimiter) {
+        return delimiter + text + delimiter;
+    }
+
+    public static String[] surroundAll(String[] text, String delimiter) {
+        for (int i = 0; i < text.length; i++) {
+            text[i] = surround(text[i], delimiter);
+        }
+        return text;
+    }
+    
 }

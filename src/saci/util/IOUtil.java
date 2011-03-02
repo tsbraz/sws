@@ -18,10 +18,12 @@
 
 package saci.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,7 +49,7 @@ public class IOUtil {
         try {
             is = new FileInputStream(file);
             if ("createHexString".equalsIgnoreCase(acao)) {
-                byte[] b = readBytes(is);
+                byte[] b = readStream(is);
                 System.out.print(createHexString(b));
             } else if ("getBytesFromHexString".equalsIgnoreCase(acao)) {
                 String s = readString(is);
@@ -71,17 +73,6 @@ public class IOUtil {
         }
     }
 
-    private static byte[] readBytes(InputStream is) throws IOException {
-        byte[] b = new byte[is.available()];
-        is.read(b);
-        return b;
-    }
-
-    private static String readString(InputStream is) throws IOException {
-        byte[] b = readBytes(is);
-        return new String(b);
-    }
-
     private static void printUsage() {
         System.out.println(
                 "Usage:" +
@@ -102,6 +93,32 @@ public class IOUtil {
                 "\n" +
                 "\n  ** Use \"IOUtil option inputFile > outFile\" to generate" +
                 "\n     a new file with the process results");
+    }
+    
+    public static byte[] readStream(InputStream in) throws IOException {
+        if (in instanceof ByteArrayInputStream) {
+            return ((ByteArrayInputStream)in).getBuffer();
+        }
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        echo(in, bout);
+        return bout.toByteArray();
+    }
+    
+    public static void echo(InputStream in, OutputStream out) throws IOException {
+        echo(in, out, BUFFER_SIZE);
+    }
+
+    public static void echo(InputStream in, OutputStream out, int bufferSize) throws IOException {
+        byte[] buf = new byte[BUFFER_SIZE];
+        int length = 0;
+        while ((length = in.read(buf)) > 0) {
+            out.write(buf, 0, length);
+        }
+    }
+
+    public static String readString(InputStream is) throws IOException {
+        byte[] b = readStream(is);
+        return new String(b);
     }
 
     public static String createHexString(byte[] bytes) {
