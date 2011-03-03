@@ -249,7 +249,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Integer value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -263,7 +264,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Short value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -277,7 +279,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Byte value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -291,7 +294,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Long value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -305,7 +309,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Float value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -319,7 +324,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Double value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -333,7 +339,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, BigDecimal value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -347,7 +354,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, BigInteger value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -361,7 +369,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Date value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -375,10 +384,19 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, String value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
+    }
+
+    private List<Integer> getParameterIndex(String name) throws SQLException {
+        List<Integer> parameterIndex = queryMap.getParameterIndex(name);
+        if (parameterIndex == null) {
+            throw new SQLException("Parameter " + name + " not found.");
+        }
+        return parameterIndex;
     }
 
     /**
@@ -389,7 +407,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setLikeParameter(String name, String value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value + "%", stmt);
         }
         return this;
@@ -403,7 +422,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setLikeAnyParameter(String name, String value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, "%" + value + "%", stmt);
         }
         return this;
@@ -417,7 +437,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, byte[] value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
@@ -431,7 +452,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, InputStream value, int length) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, length, stmt);
         }
         return this;
@@ -445,7 +467,8 @@ public class Query {
      * @throws SQLException
      */
     public Query setParameter(String name, Boolean value) throws SQLException {
-        for (Integer i : queryMap.getParameterIndex(name)) {
+        List<Integer> parameterIndex = getParameterIndex(name);
+        for (Integer i : parameterIndex) {
             dbUtil.set(i, value, stmt);
         }
         return this;
